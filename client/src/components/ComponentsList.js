@@ -9,12 +9,12 @@ import {
 class ComponentsList extends React.Component {
     render() {
         return (
-            <div className='box'>
+            <div className='list'>
                 <div className='buttons'>
-                <h1>List</h1>
+                <h2>List</h2>
                 { this.props.container.map( container =>(
                     <Link key={container.id} to={container.path} className='button'>
-                      <Button  variant='contained' color='primary'>{container.component.name}</Button>
+                      <Button className='button' variant='contained' color='primary'>{container.component.name}</Button>
                     </Link>
                 ))}
                 </div>
