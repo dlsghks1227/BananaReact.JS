@@ -8,30 +8,17 @@ import {
 import { createBrowserHistory } from 'history';
 
 // Components
+import Header from './components/Header'
 import Home from './containers/Home';
 import SignIn from './containers/SignIn';
-import page404 from './containers/page404'
-import ComponentsList from './components/ComponentsList'
+import page404 from './containers/page404';
+import Containerslist from './containers/Containerslist'
 
 // CSS
 import './App.scss';
 
 // --------------------------------
 const customHistory = createBrowserHistory();
-
-// function AuthRoute({ authenticated, component: Component, render, ...rest }) {
-//     return (
-//         <Route
-//             {...rest}
-//             render={props => authenticated ? (
-//                 render ? render(props) : <Button {...props}/>
-//             ) : (
-//                 <div/>
-//             )
-//             }
-//         />
-//     );
-// }
 
 const containers = [
     {
@@ -47,6 +34,12 @@ const containers = [
         component: SignIn,
     },
     {
+        id: 3,
+        path: '/Test',
+        exact: false,
+        component: Test,
+    },
+    {
         id: 404,
         path: '/404',
         exact: false,
@@ -54,7 +47,7 @@ const containers = [
     }
 ]
 
-class App extends React.Component {
+export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -79,20 +72,18 @@ class App extends React.Component {
     render() {
         return(
             <div className='root'>
-                <div className='header'>
-                    <h1>지금은 {this.state.date.toLocaleTimeString()}</h1>
-                </div>
+                <Header timer={this.state.date.toLocaleTimeString()}/>
                 <div className='row'>
                     <Router history={customHistory}>
-                        <ComponentsList container = {containers}/>
+                        <Containerslist container = {containers}/>
                         <Switch>
                         {
                             containers.map( container => (
                                 <Route
-                                key = {container.id}
-                                exact={container.exact}
-                                path={container.path}
-                                component={container.component}
+                                    key={container.id}
+                                    exact={container.exact}
+                                    path={container.path}
+                                    component={container.component}
                                 />
                                 ))
                             }
@@ -109,5 +100,3 @@ class App extends React.Component {
         )
     }
 }
-
-export default App;

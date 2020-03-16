@@ -1,34 +1,33 @@
 import React from 'react';
-
-// Components
+import {
+    Button,
+} from '@material-ui/core';
 
 // CSS
-// const useStyle = () => makeStyles(theme => ({
-//     paper: {
-//         marginTop: theme.spacing(8),
-//         display: 'flex',
-//         flexDirection: 'column',
-//         alignItems: 'center',
-//     },
-//     avatar: {
-//         margin: theme.spacing(1),
-//         backgroundColor: theme.palette.secondary.main,
-//     },
-//     form: {
-//         width: '100%',
-//         marginTop: theme.spacing(1),
-//     },
-//     submit: {
-//         margin: theme.spacing(3, 0, 2),
-//     },
-// }));
+import './Containers.scss'
 
 class Home extends React.Component {
+    test = (e) => {
+        fetch('users/', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                bana : 'asd',
+            })
+        })
+        .then(res => res.json())
+        .then(data => console.log(data));
+    }
+
     render() {
         return (
             <div className='container'>
-                <div className='item'>
-                    <h1>Home</h1>
+                <div className='items'>
+                    <form onSubmit={this.test}>
+                        <Button type='submit'>Test</Button>
+                    </form>
                 </div>
             </div>
         );

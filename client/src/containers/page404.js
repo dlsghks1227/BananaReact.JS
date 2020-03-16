@@ -1,10 +1,13 @@
 import React from 'react';
 
+// CSS
+import './Containers.scss'
+
 class page404 extends React.Component {
     render() {
         return(
             <div className='container'>
-                <div className='item'>
+                <div className='items'>
                     <h1>404</h1>
                 </div>
             </div>

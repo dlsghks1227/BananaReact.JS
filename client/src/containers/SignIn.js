@@ -1,16 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     TextField,
     Avatar,
+    createMuiTheme,
+    ThemeProvider,
+    Button,
 } from '@material-ui/core';
 
-class SignIn extends React.Component {
-    render() {
-        return (
-            <div className='container'>
-                <div className='item'>
-                    <Avatar></Avatar>
-                    <form>
+// CSS
+import './Containers.scss'
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: 'rgb(255,105,135)',
+        },
+    }
+});
+
+export default function SignIn() {
+    const [email, setEmail] = useState('');
+    const [password, setpassword] = useState('');
+    const url = "/users/account/";
+
+    const login = async(e) => {
+        e.persist();
+        e.preventDefault();
+        
+        const options = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({
+            })
+        }
+        const response = await fetch(url, options);
+    }
+
+    return (
+        <div className='container'>
+            <div className='items'>
+                <Avatar></Avatar>
+                <form onSubmit={login}>
+                    <ThemeProvider theme={theme}>
                         <TextField
                             variant='outlined'
                             margin='normal'
@@ -20,7 +54,8 @@ class SignIn extends React.Component {
                             label='Email Address'
                             name='email'
                             autoComplete='email'
-                            autoFocus/>  
+                            autoFocus
+                            onChange={(target)=>setEmail(target.value)}/>
                         <TextField
                             variant='outlined'
                             margin='normal'
@@ -30,46 +65,17 @@ class SignIn extends React.Component {
                             label='Password'
                             name='password'
                             type='password'
-                            autoComplete='current-password'/>
-                    </form>
-                </div>
+                            autoComplete='current-password'
+                            onChange={(target)=>setpassword(target.value)}/>
+                    </ThemeProvider>
+                    <Button type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary">
+                    Login
+                    </Button>
+                </form>
             </div>
-        );
-    }
-}
-
-//              <CssBaseline/>
-//                 <div className={useStyle.paper}>
-//                     <Avatar className={useStyle.avatar}></Avatar>
-//                     <Typography component='h1' variant='h5'>
-//                         Sign in
-//                     </Typography>
-//                     <form className={useStyle.form} noValidate method='post'>
-//                         <TextField
-//                             variant='outlined'
-//                             margin='normal'
-//                             required
-//                             fullWidth
-//                             id='password'
-//                             label='Password'
-//                             name='password'
-//                             type='password'
-//                             autoComplete='current-password'/>
-//                         <FormControlLabel
-//                             control={<Checkbox value='remember' color='primary'/>}
-//                             label='Remember me'
-//                         />
-//                         <Button
-//                             type='submit'
-//                             fullWidth
-//                             variant='contained'
-//                             color='primary'
-//                             className={useStyle.submit}>
-//                             Sign in
-//                         </Button>
-//                     </form>
-//                 </div>
-//                 <Box mt={8}>
-//                 </Box>
-
-export default SignIn;
+        </div>
+    );
+};

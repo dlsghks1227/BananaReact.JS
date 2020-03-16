@@ -1,5 +1,4 @@
 var express = require('express');
-var account = require('./account');
 
 var router = express.Router();
 
@@ -7,6 +6,10 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   console.log('Requset Type : ', req.method);
   res.render('index', { title: 'Express' });
+});
+
+router.post('/SignIn', (req, res) => {
+  res.json({ success: true });
 });
 
 module.exports = router;
