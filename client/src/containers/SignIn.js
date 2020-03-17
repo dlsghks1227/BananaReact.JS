@@ -8,7 +8,13 @@ import {
 } from '@material-ui/core';
 
 // CSS
-import './Containers.scss'
+import './Containers.scss';
+
+// API
+import { 
+    useStyle,
+    login,
+ } from '../api/api';
 
 const theme = createMuiTheme({
     palette: {
@@ -18,32 +24,16 @@ const theme = createMuiTheme({
     }
 });
 
-export default function SignIn() {
+export default function Signin() {
+    const classes = useStyle();
     const [email, setEmail] = useState('');
     const [password, setpassword] = useState('');
-    const url = "/users/account/";
-
-    const login = async(e) => {
-        e.persist();
-        e.preventDefault();
-        
-        const options = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json;charset=UTF-8'
-            },
-            body: JSON.stringify({
-            })
-        }
-        const response = await fetch(url, options);
-    }
 
     return (
         <div className='container'>
             <div className='items'>
                 <Avatar></Avatar>
-                <form onSubmit={login}>
+                <form onSubmit={(event) => login(event, email, password)} autoComplete='off'>
                     <ThemeProvider theme={theme}>
                         <TextField
                             variant='outlined'
@@ -53,9 +43,10 @@ export default function SignIn() {
                             id='email'
                             label='Email Address'
                             name='email'
-                            autoComplete='email'
+                            //autoComplete='email'
                             autoFocus
-                            onChange={(target)=>setEmail(target.value)}/>
+                            value={email}
+                            onChange={(event)=>{setEmail(event.target.value)}}/>
                         <TextField
                             variant='outlined'
                             margin='normal'
@@ -65,13 +56,12 @@ export default function SignIn() {
                             label='Password'
                             name='password'
                             type='password'
-                            autoComplete='current-password'
-                            onChange={(target)=>setpassword(target.value)}/>
+                            //autoComplete='current-password'
+                            onChange={(event)=>{setpassword(event.target.value)}}/>
                     </ThemeProvider>
-                    <Button type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary">
+                    <Button
+                        type='submit'
+                        className={classes.button}>
                     Login
                     </Button>
                 </form>
@@ -79,3 +69,6 @@ export default function SignIn() {
         </div>
     );
 };
+
+// form 삭제 후
+// Button에서 type 설정하지 말고 onClick={()=>login(email, password)} 으로도 가능

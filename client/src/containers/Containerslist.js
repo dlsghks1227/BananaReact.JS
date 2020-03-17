@@ -4,11 +4,13 @@ import {
 } from 'react-router-dom';
 import {
     Button,
-    makeStyles,
 } from '@material-ui/core';
 
 // CSS
-import './Containers.scss'
+import './Containers.scss';
+
+// API
+import { useStyle } from '../api/api';
 
 // forwardRef
 // 전달받은 ref 어트리뷰트를 하부 트리 내의 다른 컴포넌트로 전달하는
@@ -19,18 +21,32 @@ const LinkBehavior = React.forwardRef((props, ref) => (
 ));
 
 export default function Containerslist(props) {
+    const style = useStyle();
+
     return (
         <div className='list'>
             <div className='items'>
                 <h1>List</h1>
+                <h2>Container</h2>
                 {
                     props.container.map( container => (
                     <Button
-                        className='button'
+                        className={style.button}
                         component={LinkBehavior}
                         to={container.path}
                         key={container.id}>
                         {container.component.name}
+                    </Button>
+                ))}
+                <h2>Authcontainer</h2>
+                {
+                    props.authcontainer.map( authcontainer => (
+                    <Button
+                        className={style.button}
+                        component={LinkBehavior}
+                        to={authcontainer.path}
+                        key={authcontainer.id}>
+                        {authcontainer.component.name}
                     </Button>
                 ))}
             </div>
