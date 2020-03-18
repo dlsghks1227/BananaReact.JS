@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import {
+    Redirect,
+    useLocation,
+} from 'react-router-dom';
+import {
     TextField,
     Avatar,
     createMuiTheme,
@@ -8,13 +12,12 @@ import {
 } from '@material-ui/core';
 
 // CSS
-import './Containers.scss';
+import '../Containers.scss';
 
 // API
 import { 
     useStyle,
-    login,
- } from '../api/api';
+ } from '../../api/api';
 
 const theme = createMuiTheme({
     palette: {
@@ -24,16 +27,20 @@ const theme = createMuiTheme({
     }
 });
 
-export default function Signin() {
+export default function Login({login, authenticated}) {
     const classes = useStyle();
+    const location = useLocation();
+
     const [email, setEmail] = useState('');
     const [password, setpassword] = useState('');
+
+    const { from } = location.state || { from: { pathname:'/'}};
+    if(authenticated) return <Redirect to={from}/>;
 
     return (
         <div className='container'>
             <div className='items'>
                 <Avatar></Avatar>
-                <form onSubmit={(event) => login(event, email, password)} autoComplete='off'>
                     <ThemeProvider theme={theme}>
                         <TextField
                             variant='outlined'
@@ -46,7 +53,7 @@ export default function Signin() {
                             //autoComplete='email'
                             autoFocus
                             value={email}
-                            onChange={(event)=>{setEmail(event.target.value)}}/>
+                            onChange={(event) => {setEmail(event.target.value)}}/>
                         <TextField
                             variant='outlined'
                             margin='normal'
@@ -57,14 +64,14 @@ export default function Signin() {
                             name='password'
                             type='password'
                             //autoComplete='current-password'
-                            onChange={(event)=>{setpassword(event.target.value)}}/>
+                            value={password}
+                            onChange={(event) => {setpassword(event.target.value)}}/>
                     </ThemeProvider>
                     <Button
-                        type='submit'
-                        className={classes.button}>
-                    Login
-                    </Button>
-                </form>
+                        className={classes.button}
+                        onClick={() => login({email, password})}>
+                        Login
+                </Button>
             </div>
         </div>
     );

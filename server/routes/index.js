@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
 router.post('/login', function(req, res, next) {
   console.log(req.body.email);
   console.log(req.body.password);
+  
   return res.json({success: true});
 });
 

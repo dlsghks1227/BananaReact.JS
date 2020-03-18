@@ -15,8 +15,11 @@ import Containerslist from '../containers/Containerslist'
 
 // public
 import Home from '../containers/Home';
-import Signin from '../containers/Signin';
-import page404 from '../containers/Page404';
+import Login from '../containers/User/Login';
+import Page404 from '../containers/Page404';
+import Recommendform from '../containers/Recommendform';
+import Dictionaryform from '../containers/Dictionaryform';
+import Recipeform from '../containers/Recipeform';
 
 // private
 import Profile from '../containers/PrivatePage/Profile';
@@ -26,60 +29,77 @@ import './Components.scss'
 
 const customHistory = createBrowserHistory();
 
-export default function Components(props) {
+export default function Components({authenticated, login, logout}) {
     const containers = [
         {
-            id: 1,
             path: '/',
+            name: 'home',
             exact: true,
-            component: Home,
+            component: () => Home(),
         },
         {
-            id: 2,
-            path: '/Signin',
+            path: '/recommend',
+            name: 'recommend',
             exact: false,
-            component: Signin,
+            component: () => Recommendform(),
         },
         {
-            id: 404,
+            path: '/dictionary',
+            name: 'dictionary',
+            exact: true,
+            component: () => Dictionaryform(),
+        },
+        {
+            path: '/recipe',
+            name: 'recipe',
+            exact: true,
+            component: () => Recipeform(),
+        },
+        {
             path: '/404',
+            name: '404',
             exact: false,
-            component: page404,
+            component: () => Page404(),
         },
     ]
 
     const authcontainers = [
         {
-            id: 1,
             path: '/profile',
-            exact: true,
-            component: Profile,
+            name: 'profile',
+            exact: false,
+            component: () => Profile(),
         },
     ]
 
     return (
         <div className='row'>
             <Router history={customHistory}>
-                <Containerslist container={containers} authcontainer={authcontainers}/>
+                <Containerslist
+                    containers={containers}
+                    authcontainers={authcontainers}
+                    authenticated={authenticated}
+                    logout={logout}/>
                 <Switch>
                     {
-                        containers.map(container => (
+                        containers.map((container, index) => (
                             <Route
-                                key={container.id}
+                                key={index}
                                 exact={container.exact}
                                 path={container.path}
-                                component={() => container.component()}
+                                component={container.component}
                             />
                         ))
                     }
+                    <Route path='/Login' component={() => Login({login, authenticated})}></Route>
                     {
-                        authcontainers.map(authcontainer => (
+                        authcontainers.map((authcontainer, index) => (
                             <AuthRouter
-                                key={authcontainer.id}
-                                authenticated={props.authenticated}
+                                key={index}
+                                authenticated={authenticated}
                                 exact={authcontainer.exact}
                                 path={authcontainer.path}
-                                component={() => authcontainer.component()}
+                                component={authcontainer.component}
                             />
                         ))
                     }

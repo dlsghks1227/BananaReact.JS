@@ -10,10 +10,7 @@ export const useStyle = makeStyles({
     }
 });
 
-export const login = async(event, email, password) => {
-    event.persist();
-    event.preventDefault();
-
+export const Userlogin = async({email, password}) => {
     const url = '/login';
     const options = {
         method: 'POST',
@@ -28,8 +25,11 @@ export const login = async(event, email, password) => {
     }
 
     const res = await fetch(url, options);
-
-    if(res && res.status === 200) {
-
+    const resOK = res && res.status === 200;
+    var user = null;
+    if(resOK) {
+        var data = await res.json();
+        console.log(data.success);
     }
+    return user;
 };

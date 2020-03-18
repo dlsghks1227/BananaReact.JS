@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     Link as RouterLink,
+    useHistory,
 } from 'react-router-dom';
 import {
     Button,
@@ -20,35 +21,46 @@ const LinkBehavior = React.forwardRef((props, ref) => (
     <RouterLink ref={ref} {...props}/>
 ));
 
-export default function Containerslist(props) {
+export default function Containerslist({containers, authcontainers, authenticated, logout}) {
     const style = useStyle();
+    const history = useHistory();
+
+    const handleClick = () => {
+        logout();
+        history.push('/');
+    }
 
     return (
         <div className='list'>
             <div className='items'>
-                <h1>List</h1>
                 <h2>Container</h2>
+                { authenticated ?
+                    <Button className={style.button} component={LinkBehavior} onClick={handleClick}>Logout</Button> :
+                    <Button className={style.button} component={LinkBehavior} to='/login'>Login</Button>
+                }
                 {
-                    props.container.map( container => (
-                    <Button
-                        className={style.button}
-                        component={LinkBehavior}
-                        to={container.path}
-                        key={container.id}>
-                        {container.component.name}
-                    </Button>
-                ))}
+                    containers.map((container, index) => (
+                        <Button
+                            key={index}
+                            className={style.button}
+                            component={LinkBehavior}
+                            to={container.path}>
+                            {container.name}
+                        </Button>
+                    ))
+                }
                 <h2>Authcontainer</h2>
                 {
-                    props.authcontainer.map( authcontainer => (
+                    authenticated ? 
+                    authcontainers.map((authcontainer, index) => (
                     <Button
                         className={style.button}
                         component={LinkBehavior}
                         to={authcontainer.path}
-                        key={authcontainer.id}>
-                        {authcontainer.component.name}
+                        key={index}>
+                        {authcontainer.name}
                     </Button>
-                ))}
+                )) : ''}
             </div>
         </div>
     );
