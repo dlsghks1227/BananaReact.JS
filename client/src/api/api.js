@@ -1,3 +1,4 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 
 export const useStyle = makeStyles({
@@ -9,6 +10,66 @@ export const useStyle = makeStyles({
         margin: '0.3rem 0'
     }
 });
+
+const authContext = createContext();
+
+export const ProvideAuth = ({ children }) => {
+    const auth = useProvideAuth();
+    return <authContext.Provider value={auth}>{children}</authContext.Provider>;
+}
+
+export const useAuth = () => {
+    return useContext(authContext);
+}
+
+const useProvideAuth = () => {
+    const [user, setUser] = useState(null);
+
+    const login = async({email, password}) => {
+        const url = '/login';
+        const options = {
+            method: 'POST',
+            headers: {
+                'Accept' : 'application/json',
+                'Content-Type' : 'application/json;charset=UTF-8',
+            },
+            body: JSON.stringify({
+                email : email,
+                password: password
+            })
+        }
+
+        
+        try {
+            const response = await fetch(url, options);
+            if(response.ok && response.status === 200) {
+                const data = await response.json();
+                if(data.success === true) {
+                    setUser({
+                        email : email,
+                        password: password
+                    });
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const logout = () => {
+        setUser(null);
+    }
+
+    useEffect(() => {
+        setUser(null);
+    }, []);
+
+    return {
+        user,
+        login,
+        logout,
+    }
+}
 
 export const Userlogin = async({email, password}) => {
     const url = '/login';
@@ -24,12 +85,18 @@ export const Userlogin = async({email, password}) => {
         })
     }
 
-    const res = await fetch(url, options);
-    const resOK = res && res.status === 200;
-    var user = null;
-    if(resOK) {
-        var data = await res.json();
-        console.log(data.success);
+    try {
+        const response = await fetch(url, options);
+        console.log(await response.text());
+
+
+    } catch (err) {
+        console.log(err);
     }
-    return user;
+    // const resOK = res && res.status === 200;
+    // var user = null;
+    // if(resOK) {
+    //     var data = await res.json();
+    //     console.log(data.success);
+    // }
 };

@@ -3,13 +3,16 @@ import {
     Route,
     Redirect,
 } from 'react-router-dom'
+import { useAuth } from "../api/api";
 
-export default function AuthRoute({ authenticated, component: Component, render, ...rest}) {
+export default function AuthRoute({component : Component, render, ...rest}) {
+    const auth = useAuth();
+    
     return (
         <Route
             {...rest}
             render={props=>
-                authenticated ? (
+                auth.user ? (
                     render ? render(props) : <Component {...props}/>
                 ) : (
                     <Redirect

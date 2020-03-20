@@ -11,6 +11,9 @@ import {
     Button,
 } from '@material-ui/core';
 
+// API
+import { useAuth } from "../../api/api";
+
 // CSS
 import '../Containers.scss';
 
@@ -27,15 +30,20 @@ const theme = createMuiTheme({
     }
 });
 
-export default function Login({login, authenticated}) {
+export default function Login() {
+    const auth = useAuth();
     const classes = useStyle();
     const location = useLocation();
 
     const [email, setEmail] = useState('');
     const [password, setpassword] = useState('');
 
+    const handleClick = () => {
+        auth.login({email, password});
+    }
+
     const { from } = location.state || { from: { pathname:'/'}};
-    if(authenticated) return <Redirect to={from}/>;
+    if(auth.user) return <Redirect to={from}/>;
 
     return (
         <div className='container'>
@@ -69,7 +77,7 @@ export default function Login({login, authenticated}) {
                     </ThemeProvider>
                     <Button
                         className={classes.button}
-                        onClick={() => login({email, password})}>
+                        onClick={handleClick}>
                         Login
                 </Button>
             </div>

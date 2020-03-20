@@ -11,7 +11,7 @@ import {
 import './Containers.scss';
 
 // API
-import { useStyle } from '../api/api';
+import { useAuth, useStyle } from '../api/api';
 
 // forwardRef
 // 전달받은 ref 어트리뷰트를 하부 트리 내의 다른 컴포넌트로 전달하는
@@ -21,12 +21,13 @@ const LinkBehavior = React.forwardRef((props, ref) => (
     <RouterLink ref={ref} {...props}/>
 ));
 
-export default function Containerslist({containers, authcontainers, authenticated, logout}) {
+export default function Containerslist({containers, authcontainers}) {
+    const auth = useAuth();
     const style = useStyle();
     const history = useHistory();
 
     const handleClick = () => {
-        logout();
+        auth.logout();
         history.push('/');
     }
 
@@ -34,8 +35,8 @@ export default function Containerslist({containers, authcontainers, authenticate
         <div className='list'>
             <div className='items'>
                 <h2>Container</h2>
-                { authenticated ?
-                    <Button className={style.button} component={LinkBehavior} onClick={handleClick}>Logout</Button> :
+                { auth.user ?
+                    <Button className={style.button} onClick={handleClick}>Logout</Button> :
                     <Button className={style.button} component={LinkBehavior} to='/login'>Login</Button>
                 }
                 {
@@ -51,13 +52,13 @@ export default function Containerslist({containers, authcontainers, authenticate
                 }
                 <h2>Authcontainer</h2>
                 {
-                    authenticated ? 
+                    auth.user ? 
                     authcontainers.map((authcontainer, index) => (
                     <Button
+                        key={index}
                         className={style.button}
                         component={LinkBehavior}
-                        to={authcontainer.path}
-                        key={index}>
+                        to={authcontainer.path}>
                         {authcontainer.name}
                     </Button>
                 )) : ''}

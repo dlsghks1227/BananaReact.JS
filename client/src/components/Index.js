@@ -7,6 +7,8 @@ import {
 } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
+import { ProvideAuth } from "../api/api";
+
 // Components
 import AuthRouter from './AuthRouter';
 
@@ -29,7 +31,7 @@ import './Components.scss'
 
 const customHistory = createBrowserHistory();
 
-export default function Components({authenticated, login, logout}) {
+export default function Components() {
     const containers = [
         {
             path: '/',
@@ -74,38 +76,37 @@ export default function Components({authenticated, login, logout}) {
 
     return (
         <div className='row'>
-            <Router history={customHistory}>
-                <Containerslist
-                    containers={containers}
-                    authcontainers={authcontainers}
-                    authenticated={authenticated}
-                    logout={logout}/>
-                <Switch>
-                    {
-                        containers.map((container, index) => (
-                            <Route
-                                key={index}
-                                exact={container.exact}
-                                path={container.path}
-                                component={container.component}
-                            />
-                        ))
-                    }
-                    <Route path='/Login' component={() => Login({login, authenticated})}></Route>
-                    {
-                        authcontainers.map((authcontainer, index) => (
-                            <AuthRouter
-                                key={index}
-                                authenticated={authenticated}
-                                exact={authcontainer.exact}
-                                path={authcontainer.path}
-                                component={authcontainer.component}
-                            />
-                        ))
-                    }
-                    <Route render={()=>(<Redirect to='/404'/>)}/>
-                </Switch>
-            </Router>
+            <ProvideAuth>
+                <Router history={customHistory}>
+                    <Containerslist
+                        containers={containers}
+                        authcontainers={authcontainers}/>
+                    <Switch>
+                        {
+                            containers.map((container, index) => (
+                                <Route
+                                    key={index}
+                                    exact={container.exact}
+                                    path={container.path}
+                                    component={container.component}
+                                />
+                            ))
+                        }
+                        {
+                            authcontainers.map((authcontainer, index) => (
+                                <AuthRouter
+                                    key={index}
+                                    exact={authcontainer.exact}
+                                    path={authcontainer.path}
+                                    component={authcontainer.component}
+                                />
+                                ))
+                        }
+                        <Route path='/Login' component={() => Login()}></Route>
+                        <Route render={()=>(<Redirect to='/404'/>)}/>
+                    </Switch>
+                </Router>
+            </ProvideAuth>
         </div>
     );
 }
