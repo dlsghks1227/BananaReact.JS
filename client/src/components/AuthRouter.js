@@ -3,6 +3,8 @@ import {
     Route,
     Redirect,
 } from 'react-router-dom'
+
+// API
 import { useAuth } from "../api/api";
 
 export default function AuthRoute({component : Component, render, ...rest}) {

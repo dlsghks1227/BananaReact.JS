@@ -25,6 +25,22 @@ export const useAuth = () => {
 const useProvideAuth = () => {
     const [user, setUser] = useState(null);
 
+    useEffect(() => {
+        const fetchData = async() => {
+            try {
+                const response = await fetch('/getinfo');
+                const data = await response.json();
+                if(response.ok && response.status === 200) {
+                    setUser({ userinfo : data.userinfo });
+                }
+            } catch(err) {
+                console.log(err);
+            }
+        }
+        fetchData();
+    }, []);
+
+
     const login = async({email, password}) => {
         const url = '/login';
         const options = {
@@ -38,31 +54,28 @@ const useProvideAuth = () => {
                 password: password
             })
         }
-
         
         try {
             const response = await fetch(url, options);
+            const data = await response.json();
             if(response.ok && response.status === 200) {
-                const data = await response.json();
-                if(data.success === true) {
-                    setUser({
-                        email : email,
-                        password: password
-                    });
-                }
+                setUser({ userinfo : data.userinfo });
             }
         } catch (err) {
             console.log(err);
         }
     }
 
-    const logout = () => {
-        setUser(null);
+    const logout = async() => {
+        try {
+            const response = await fetch('/logout');
+            if(response.ok && response.status === 200) {
+                setUser(null);
+            }
+        } catch(err) {
+            console.log(err);
+        }
     }
-
-    useEffect(() => {
-        setUser(null);
-    }, []);
 
     return {
         user,
@@ -70,33 +83,3 @@ const useProvideAuth = () => {
         logout,
     }
 }
-
-export const Userlogin = async({email, password}) => {
-    const url = '/login';
-    const options = {
-        method: 'POST',
-        headers: {
-            'Accept' : 'application/json',
-            'Content-Type' : 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify({
-            email : email,
-            password: password
-        })
-    }
-
-    try {
-        const response = await fetch(url, options);
-        console.log(await response.text());
-
-
-    } catch (err) {
-        console.log(err);
-    }
-    // const resOK = res && res.status === 200;
-    // var user = null;
-    // if(resOK) {
-    //     var data = await res.json();
-    //     console.log(data.success);
-    // }
-};

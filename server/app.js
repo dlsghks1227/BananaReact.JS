@@ -4,13 +4,25 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 // 로그 기록을 남기는 모듈
 var logger = require('morgan');
+var session = require('express-session');
 
-// -----Router-----
+/* ------Router------ */
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// ----------------
+/* ------------------ */
 
 var app = express();
+
+/* ----use session---- */
+// secret : 쿠키를 임의로 변조하는 것을 방지하기 위한 값
+// resave : 세션을 언제나 저장할 지(변경되지 않아도) 정하는 값
+// saveUninitalized : 세션이 저장되기 전에 Uninitalized 상태로 미리 만들어서 저장
+app.use(session({
+    secret: 'BananaLove!@#$',
+    resave: false,
+    saveUninitialized: true
+}));
+/* ------------------- */
 
 app.use(logger('dev'));
 

@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 // CSS
 import '../Containers.scss'
 
-export default function Profile() {
-    const [content, setContent] = useState(null);
+// API
+import { useAuth } from '../../api/api';
 
-    const test = () => {
-        setContent([
-           {combineName : 'test1', Decs : 'test2', combinealcol : 'test3', like:4, kind:'test5'},
-        ])
-        console.log(content);
+export default function Profile() {
+    const auth = useAuth();
+
+    const handleClick = () => {
     }
 
     return (
         <div className='container'>
             <div className='items'>
-                <button onClick={test}/>
-                {content ? content.map((items, index) => (
-                    <div key={index}>
-                        <p>{items.combineName}</p>
-                        <p>{items.Decs}</p>
-                        <p>{items.combinealcol}</p>
-                        <p>{items.like}</p>
-                        <p>{items.kind}</p>
-                    </div>
-                )) : ''}
+                {auth.user ?
+                    <div>
+                        <p>{auth.user.userinfo._id}</p>
+                        <p>{auth.user.userinfo._email}</p>
+                        <p>{auth.user.userinfo._name}</p>
+                    </div> : ''}
+
+                <button onClick={handleClick}/>
             </div>
         </div>
     );

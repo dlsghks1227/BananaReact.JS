@@ -19,12 +19,42 @@ router.post('/login', function(req, res, next) {
   }
 
   const user = Account.find(user => user.email === req.body.email && user.password === req.body.password);
-  if(user === undefined) return res.json({success: false});
+  if(user === undefined) {
+    return res.status(401).json({
+      error:"LOGIN FAILED",
+      code: 1,
+    })
+  }
 
-  console.log(user);
+  var session = req.session;
+  session.loginInfo ={
+    _id: user.id,
+    _email: user.email,
+    _name: user.name,
+  }
+
+  console.log(session.loginInfo);
   //var usernameRegex = /^[a-z0-9]+$/;
   
-  return res.json({success: true});
+  return res.json({ userinfo : session.loginInfo });
+});
+
+router.get('/logout', function(req, res, next) {
+  req.session.destroy(function(err) {
+    if(err) throw err;
+  });
+
+  return res.json({ success: true });
+});
+
+router.get('/getinfo', function(req, res, next) {
+  if(typeof req.session.loginInfo === "undefined") {
+    return res.status(401).json({
+      error: 1
+    });
+  }
+
+  return res.json({ userinfo : req.session.loginInfo });
 });
 
 module.exports = router;

@@ -11,14 +11,12 @@ import {
     Button,
 } from '@material-ui/core';
 
-// API
-import { useAuth } from "../../api/api";
-
 // CSS
 import '../Containers.scss';
 
 // API
 import { 
+    useAuth,
     useStyle,
  } from '../../api/api';
 
@@ -38,7 +36,8 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setpassword] = useState('');
 
-    const handleClick = () => {
+    const handleSubmit = (event) => {
+        event.preventDefault();
         auth.login({email, password});
     }
 
@@ -48,7 +47,8 @@ export default function Login() {
     return (
         <div className='container'>
             <div className='items'>
-                <Avatar></Avatar>
+                <form onSubmit={handleSubmit}>
+                    <Avatar/>
                     <ThemeProvider theme={theme}>
                         <TextField
                             variant='outlined'
@@ -76,10 +76,13 @@ export default function Login() {
                             onChange={(event) => {setpassword(event.target.value)}}/>
                     </ThemeProvider>
                     <Button
-                        className={classes.button}
-                        onClick={handleClick}>
+                        type='submit'
+                        variant='contained'
+                        color='primary'
+                        className={classes.button}>
                         Login
-                </Button>
+                    </Button>
+                </form>
             </div>
         </div>
     );
