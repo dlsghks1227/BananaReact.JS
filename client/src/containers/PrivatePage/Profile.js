@@ -9,9 +9,6 @@ import { useAuth } from '../../api/api';
 export default function Profile() {
     const auth = useAuth();
 
-    const handleClick = () => {
-    }
-
     return (
         <div className='container'>
             <div className='items'>
@@ -21,8 +18,6 @@ export default function Profile() {
                         <p>{auth.user.userinfo._email}</p>
                         <p>{auth.user.userinfo._name}</p>
                     </div> : ''}
-
-                <button onClick={handleClick}/>
             </div>
         </div>
     );

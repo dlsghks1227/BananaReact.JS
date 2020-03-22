@@ -30,13 +30,14 @@ const useProvideAuth = () => {
             try {
                 const response = await fetch('/getinfo');
                 const data = await response.json();
-                if(response.ok && response.status === 200) {
+                if(response.ok && response.status === 200 && data.success === true) {
                     setUser({ userinfo : data.userinfo });
                 }
             } catch(err) {
                 console.log(err);
             }
         }
+        
         fetchData();
     }, []);
 
@@ -58,7 +59,7 @@ const useProvideAuth = () => {
         try {
             const response = await fetch(url, options);
             const data = await response.json();
-            if(response.ok && response.status === 200) {
+            if(response.ok && response.status === 200 && data.success === true) {
                 setUser({ userinfo : data.userinfo });
             }
         } catch (err) {
@@ -69,7 +70,9 @@ const useProvideAuth = () => {
     const logout = async() => {
         try {
             const response = await fetch('/logout');
-            if(response.ok && response.status === 200) {
+            const data = await response.json();
+
+            if(response.ok && response.status === 200 && data.success === true) {
                 setUser(null);
             }
         } catch(err) {
